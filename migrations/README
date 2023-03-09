@@ -1,0 +1,9 @@
+Generic single-database configuration.
+
+
+
+Шпаргалка  команд:
+
+Команда для миграции с БД "alembic init migrations"
+Команда для генерации "alembic revision --autogenerate -m "Database creation"
+Команда для подключения БД миграцию "alembic upgrade f779b887773d"
