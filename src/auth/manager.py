@@ -1,9 +1,10 @@
-from fastapi import Depends, Request
-from fastapi_users import BaseUserManager, IntegerIDMixin, models, schemas, exceptions
-from .models import User
 from typing import Optional
+from fastapi import Depends, Request
+from fastapi_users import (BaseUserManager, IntegerIDMixin, exceptions, models,
+                           schemas)
+from src.auth.models import User
+from src.auth.utils import get_user_db
 from src.config import SECRET_AUTH
-from .utils.py import get_user_db
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
@@ -14,10 +15,10 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         print(f"User {user.id} has registered.")
 
     async def create(
-            self,
-            user_create: schemas.UC,
-            safe: bool = False,
-            request: Optional[Request] = None,
+        self,
+        user_create: schemas.UC,
+        safe: bool = False,
+        request: Optional[Request] = None,
     ) -> models.UP:
         await self.validate_password(user_create.password, user_create)
 
@@ -26,7 +27,9 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
             raise exceptions.UserAlreadyExists()
 
         user_dict = (
-            user_create.create_update_dict_superuser()
+            user_create.create_update_dict()
+            if safe
+            else user_create.create_update_dict_superuser()
         )
         password = user_dict.pop("password")
         user_dict["hashed_password"] = self.password_helper.hash(password)
@@ -35,6 +38,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         created_user = await self.user_db.create(user_dict)
 
         await self.on_after_register(created_user, request)
+
         return created_user
 
 

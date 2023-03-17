@@ -1,20 +1,19 @@
 from datetime import datetime
+
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from src.database import Base
-from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, ForeignKey, JSON, Boolean
+from sqlalchemy import (JSON, TIMESTAMP, Boolean, Column, ForeignKey, Integer,
+                        String, Table)
 
-metadata = MetaData()  # Переменная
+from src.database import Base, metadata
 
-# Роли для пользователей
 role = Table(
     "role",
     metadata,
-    Column("id", Integer, primary_key=True), # primary_key=True это уникальный ключь
-    Column("name", String, nullable=False), # nullable=False Столбец не может быть пустым
+    Column("id", Integer, primary_key=True),
+    Column("name", String, nullable=False),
     Column("permissions", JSON),
 )
 
-# Пользователи
 user = Table(
     "user",
     metadata,

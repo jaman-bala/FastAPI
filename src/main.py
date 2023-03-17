@@ -1,7 +1,12 @@
 from fastapi import FastAPI
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend, CACHE_KEY, RedisCacheBackend
+from redis import asyncio as aioredis
+
 from auth.base_config import auth_backend, fastapi_users
-from auth.schemas import UserRead, UserCreate
+from auth.schemas import UserCreate, UserRead
 from operations.router import router as router_operation
+from tasks.router import router as router_tasks
 
 app = FastAPI(
     title="Trading App"
@@ -20,3 +25,10 @@ app.include_router(
 )
 
 app.include_router(router_operation)
+app.include_router(router_tasks)
+
+
+@app.on_event("startup")
+async def startup_event():
+    redis = aioredis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
