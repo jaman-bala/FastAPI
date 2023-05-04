@@ -31,3 +31,14 @@ def pricing(request: Request):
 @app.get("/faq")
 def faq(request: Request):
     return templates.TemplateResponse("faq.html", {"request": request})
+
+
+@app.get("/user/singin")
+def login(req: Request):
+    return templates.TemplateResponse("/login.html", {"request": req})
+
+
+@app.get("/user/singup")
+def singup(req: Request):
+    return templates.TemplateResponse("/singup.html", {"request": req})
+
