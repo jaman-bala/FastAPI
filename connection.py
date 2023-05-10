@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from typing import Optional
 
 #dbcon = "postgresql://user:password@postgresserver/db"
-dbcon = 'sqlite:///fastapidb.sqlite3'
+dbcon = 'sqlite:///sitedb.sqlite3'
 
 engine = create_engine(dbcon)
 SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -15,7 +15,7 @@ DATABASE_URL: Optional[str] = None
 SECRET_KEY: Optional[str] = "HJLVu524wefgew81c4&*^&*(5vsg454w"
 
 
-def sess_db():
+async def sess_db():
     db = SessionFactory()
     try:
         yield db
