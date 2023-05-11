@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer, Boolean, Enum
 
-from connection import Base
-from app.user.schema import Roles
+from backend.config.connection import Base
+from backend.apps.user.schema import Roles
 
 
 class UserModel(Base):
